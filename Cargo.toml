@@ -1,0 +1,10 @@
+[package]
+name = "sw_rune_proxy"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+hudsucker = "0.24.0"
+hyper = "1.9.0"
+rcgen = "0.14.7"
+tokio = { version = "1.52.1", features = ["full"] }
