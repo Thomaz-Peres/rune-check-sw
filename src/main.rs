@@ -1,12 +1,13 @@
 use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
+use tokio_rustls::{TlsAcceptor, TlsConnector};
 use std::{
     fs::{self},
     sync::Arc,
 };
 // use rustls::{ClientConfig, ConfigBuilder, ServerConfig};
 use tokio::{
-    io::{AsyncReadExt, AsyncWriteExt, BufReader},
-    net::TcpListener,
+    io::{AsyncReadExt, AsyncWriteExt},
+    net::{TcpListener, TcpStream},
 };
 
 // use std::io::{Read, Write};
@@ -87,6 +88,15 @@ async fn listener(cert_pem: String, key_pem: String) -> Result<(), Box<dyn std::
 
     let acceptor: tokio_rustls::TlsAcceptor = tokio_rustls::TlsAcceptor::from(Arc::new(config));
 
+    let mut root_store = rustls::RootCertStore::empty();
+    root_store.extend(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
+
+    let client_config = rustls::ClientConfig::builder()
+        .with_root_certificates(root_store)
+        .with_no_client_auth();
+
+    let connector = tokio_rustls::TlsConnector::from(Arc::new(client_config));
+
     let listener = TcpListener::bind("127.0.0.1:443")
         .await
         .expect("Could not bind to address");
@@ -96,40 +106,94 @@ async fn listener(cert_pem: String, key_pem: String) -> Result<(), Box<dyn std::
     loop {
         // Accept a new connection
         let (socket, addr) = listener.accept().await?;
+
         let acceptor = acceptor.clone();
+        let connector = connector.clone();
+
         println!("New client connected: {}", addr);
 
         // Spawn a task to handle the connection concurrently
         tokio::spawn(async move {
-            let mut tls_stream = match acceptor.accept(socket).await {
-                Ok(s) => {
-                    println!("TLS handshake OK with {}", addr);
-                    s
-                }
-                Err(e) => {
-                    eprintln!("TSL handshake failed: {:?}", e);
-                    return;
-                }
-            };
+            if let Err(e) = handle_connection(socket, addr, acceptoir, connector).await {
+                eprintln!("[{}] error: {:?}", addr, e);
+            }
+            // let mut tls_stream = match acceptor.accept(socket).await {
+            //     Ok(s) => {
+            //         println!("TLS handshake OK with {}", addr);
+            //         s
+            //     }
+            //     Err(e) => {
+            //         eprintln!("TSL handshake failed: {:?}", e);
+            //         return;
+            //     }
+            // };
 
-            let mut buf = [0u8; 4096];
-            match tls_stream.read(&mut buf).await {
-                Ok(n) if n > 0 => {
-                    println!(
-                        "Got {} decrypted bytes: \n---\n{}\n---",
-                        n,
-                        String::from_utf8_lossy(&buf[..n]));
+            // let mut buf = [0u8; 4096];
+            // match tls_stream.read(&mut buf).await {
+            //     Ok(n) if n > 0 => {
+            //         println!(
+            //             "Got {} decrypted bytes: \n---\n{}\n---",
+            //             n,
+            //             String::from_utf8_lossy(&buf[..n]));
 
-                    let _ = tls_stream.write_all(b"HTTP/1.1 200 OK\r\nConten-Lenght: 12\r\n\r\nHello, world",).await;
-                } // Connection closed
-                _ => {}
-            };
+            //         let _ = tls_stream.write_all(b"HTTP/1.1 200 OK\r\nConten-Lenght: 12\r\n\r\nHello, world",).await;
+            //     } // Connection closed
+            //     _ => {}
+            // };
 
-            // // Echo the data back to the client
-            // if let Err(e) = socket.write_all(&buf[0..n]).await {
-            //     eprintln!("Failed to write to socket; err = {:?}", e);
-            //     return;
-            // }
+            // // // Echo the data back to the client
+            // // if let Err(e) = socket.write_all(&buf[0..n]).await {
+            // //     eprintln!("Failed to write to socket; err = {:?}", e);
+            // //     return;
+            // // }
         });
     }
+}
+
+async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
+    acceptor: TlsAcceptor, connector: TlsConnector
+) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    let client_tls = acceptor.accept(client_socket).await?;
+
+    println!("[{}] inbound TLS up", addr);
+
+    // Open TCP to the real Com2us Server
+    let upstream_tcp = TcpStream::connect("43.168.80.90:443").await?;
+
+    let server_name = rustls::pki_types::ServerName::try_from("summonerswar-fn.qpyou.cn")?;
+
+    let upstream_tls = connector.connect(server_name, upstream_tcp).await?;
+    println!("[{}] inbound TLS up to Com2us", addr);
+
+    let (mut client_rx, mut client_tx) = tokio::io::split(client_tls);
+    let (mut server_rx, mut server_tx) = tokio::io::split(upstream_tls);
+
+    let to_upstream = async {
+        let mut buf = vec![0u8; 8192];
+
+        loop {
+            let n = client_rx.read(&mut buf).await?;
+            if n == 0 { break; }
+
+            println!("[{}] →→ {} bytes\n{}", addr, n, String::from_utf8_lossy(&buf[..n]));
+
+            server_tx.write_all(&buf[..n]).await?;
+        }
+        Ok::<(), std::io::Error>(())
+    };
+
+        let to_client = async {
+        let mut buf = vec![0u8; 8192];
+        loop {
+            let n = server_rx.read(&mut buf).await?;
+            if n == 0 { break; }
+            println!("[{}] ←← {} bytes\n{}", addr, n, String::from_utf8_lossy(&buf[..n]));
+            client_tx.write_all(&buf[..n]).await?;
+        }
+        Ok::<(), std::io::Error>(())
+    };
+
+    let _ = tokio::try_join!(to_upstream, to_client);
+    println!("[{}] closed", addr);
+    Ok(())
 }
