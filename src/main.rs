@@ -12,7 +12,7 @@ use tokio::{
 
 // use std::io::{Read, Write};
 
-use rcgen::{CertificateParams, IsCa, Issuer, KeyPair};
+use rcgen::{CertificateParams, IsCa, KeyPair};
 
 #[tokio::main]
 async fn main() {
@@ -22,7 +22,7 @@ async fn main() {
         }
     }
 
-    match generate_root_leaf("summonerswar-fn.qpyou.cn") {
+    match generate_root_leaf("summonerswar-gb-lb.qpyou.cn") {
         Ok((cert_pem, _key_pem)) => {
             listener(cert_pem, _key_pem).await.unwrap();
         }
@@ -60,7 +60,7 @@ fn generate_root_leaf(hostname: &str) -> Result<(String, String), Box<dyn std::e
     let ca_key_pair = KeyPair::from_pem(&ca_key_pem)?;
     let ca_cert_pem = fs::read_to_string("ca.crt")?;
 
-    let issuer = Issuer::from_ca_cert_pem(&ca_cert_pem, ca_key_pair)?;
+    let issuer = rcgen::Issuer::from_ca_cert_pem(&ca_cert_pem, ca_key_pair)?;
 
     let leaf_key = KeyPair::generate()?;
 
@@ -114,7 +114,7 @@ async fn listener(cert_pem: String, key_pem: String) -> Result<(), Box<dyn std::
 
         // Spawn a task to handle the connection concurrently
         tokio::spawn(async move {
-            if let Err(e) = handle_connection(socket, addr, acceptoir, connector).await {
+            if let Err(e) = handle_connection(socket, addr, acceptor, connector).await {
                 eprintln!("[{}] error: {:?}", addr, e);
             }
             // let mut tls_stream = match acceptor.accept(socket).await {
@@ -157,10 +157,13 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
     println!("[{}] inbound TLS up", addr);
 
-    // Open TCP to the real Com2us Server
-    let upstream_tcp = TcpStream::connect("43.168.80.90:443").await?;
+    let SWRequestChunk: Vec<&str> = Vec::new();
+    let SWResponseChunk: Vec<&str> = Vec::new();
 
-    let server_name = rustls::pki_types::ServerName::try_from("summonerswar-fn.qpyou.cn")?;
+    // Open TCP to the real Com2us Server
+    let upstream_tcp = TcpStream::connect("34.160.216.76:443").await?;
+
+    let server_name = rustls::pki_types::ServerName::try_from("summonerswar-gb-lb.qpyou.cn")?;
 
     let upstream_tls = connector.connect(server_name, upstream_tcp).await?;
     println!("[{}] inbound TLS up to Com2us", addr);

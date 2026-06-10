@@ -1,0 +1,85 @@
+[127.0.0.1:49629] →→ 259 bytes
+POST /api/gateway_c2.php HTTP/1.1
+Connection: Keep-Alive
+Content-Type: application/octet-stream
+User-Agent: WinHTTP1.0
+SmonTmVal: 1980221635
+SmonChecker: 32C2151007A97698AFC72C728ED7A682F53412BD
+Content-Length: 472
+Host: summonerswar-gb-lb.qpyou.cn
+
+
+[127.0.0.1:49629] →→ 472 bytes
+vtgSQBCkzpT+duvn5CVFKBy943E8fjhK8k/mI0AjYkifsgqqIangMvjQK5ExCvz5NQyB9/rsvQAFjMhAHFzD14liV0jxTXzbfnIPQb0RbgXUsbeioa662Wv5aesggfbfqLqm8QAuMCTcvSZdlsHx/xwWGqS8ZCmt2oKlRz4iJEqu32cTtsZ8ekkEUcHLm89G4ncbdaC0ZSH2nP0QSYBsB4abIQn8+dpLsEiX2CmtlCTP7YqsFl1KJ4+x/du6AmZ1ZIP0i6yNaZwkxIGUlh7uOZi4fIrpGjhzU8Xg0SuOqmRvyuPHF30/8ULY4RjVaRzrW7fgcVmcN0OBzRWws9rggEFo0YHaQN3uEVBhAbxVeByzesyrr5WCJfvIEOJQKR04CYc2gJWyzlyr/L2nCS5RLm9y9jTSAPqGbPwa4UMjHGyPcJkkOCnNyjAKb8/acFd1PkbQ7Cx9756pt0GBUFNRsg==
+[127.0.0.1:49629] ←← 1246 bytes
+HTTP/1.1 200 OK
+Date: Wed, 10 Jun 2026 02:39:11 GMT
+Content-Type: application/octet-stream; charset=utf-8
+Content-Length: 1004
+Cache-Control: no-cache, must-revalidate
+Pragma: no-cache
+Via: 1.1 google
+Alt-Svc: h3=":443"; ma=2592000
+
+33tZirRCpp4WoYEe0wWTtAdm89YtvRXoVpUz3Ti/FsukjnQlY6Z5n4bB610RD239izC0/lLpTdKLCVWHEnnKLL0nz0PRJglwwiQtTApIWHbPEjRkmNalywSdMNCtYd2X4L4ZBYw1vWfIkzOnRcGTSf0tKvD6YzMuneEoS6rrJEtjJtfnxRBzrgHb1V+4S0c/Eas4fsTnzbpt9FdlN9vRij/mjeMdxy8LoIgJvYBuE+LgRLskpdm1adV3BwDYUj06vaPY6siJX4989CVefwoDfX0FVgsZVJT/ARwZY1CpW82zjnfHeBsLyHg1NLx05sUpCwXNCXLGy338gfXBjvtc71CBgSJsV05eg2ncRa5UdJ0PlmSmRXN0WnAaIUklRMavk3ZyYID0pIWYNxVPYNdK43VAtrZetTdzKBLv/ArPw9QCDkVYGqMPfvQg/dMUvOlaq6qYmU3OLYjdIbLq9Hkpc5LjOCjrqAROFQif2+xMhn4TpOPS75Q6Khl2L0AnK7vCIpw+60KeYXKx0eQLyfZdJfxHiAOLUFWIUiS4U+vlGIMNhvx3e0xV9J6fDlQX5BNBzPWIevVCol8ZQ4+feL50e51D+siA+yAVa6Gukx64Pr0IBaGRi48EvT4Y9M7kzMLLNL0oKGi5pr4Lt8Aw0ngsjX9Gr+CL/5LxAU9R7RXAfO0dHK9TV/Q97YcUe7Vu1DvAcFvhXSVgNsGUk8itCy6lS+BkQu5WWr6btZ8tzpHql4zuKBz4fEgwKfO6VvMiMnO+YduVWa0AmUqD6rT6LpdOatUGY3H1ep9MyW41Pex0l2Z0SLL+SBngcywyjmK8gSPBJ2dAccX6ErfKpq14q6aiMZX6+g74NQV18+jSCfht6c7QlKVfUkW7qvGpHhDW3tyPiOGYoXbFCGsIP/O2rV6IJhuL9l2lI8MIgWFH0N8l35iy/omjQSKZSemV6U5InzZ2xk5VO6QFOEGWKLhdCSHk2Yp8ZHR+EcI1BqjQXHWkVe8=
+
+----------------------------------------------
+Compra
+[127.0.0.1:54987] →→ 259 bytes
+POST /api/gateway_c2.php HTTP/1.1
+Connection: Keep-Alive
+Content-Type: application/octet-stream
+User-Agent: WinHTTP1.0
+SmonTmVal: 1980221455
+SmonChecker: 2FCF4492EA05B575D1ECDAB2C7CF294A3688344F
+Content-Length: 472
+Host: summonerswar-gb-lb.qpyou.cn
+
+
+[127.0.0.1:54987] →→ 472 bytes
+vtgSQBCkzpT+duvn5CVFKBy943E8fjhK8k/mI0AjYkifsgqqIangMvjQK5ExCvz5NQyB9/rsvQAFjMhAHFzD14liV0jxTXzbfnIPQb0RbgXUsbeioa662Wv5aesggfbfqLqm8QAuMCTcvSZdlsHx/xwWGqS8ZCmt2oKlRz4iJEqu32cTtsZ8ekkEUcHLm89G4ncbdaC0ZSH2nP0QSYBsB4abIQn8+dpLsEiX2CmtlCTP7YqsFl1KJ4+x/du6AmZ1B9sYt2h+ltPr1IAryegnnfqYhR+M/jU+0yfVUUJNV9l+Jejas1xGsm9L/pDk+oelAUh0lZKmTMisbs4kfcCDwNNBxgCICsunMDzNrxrWt2Vb+3JCTzYXG+ryYFJDsfGql3UFLUWomrc66lnUdLTa3V2w9bHZzVnobMSVtk1wagq6Tf7+Mw25mFvFOjZjA+9m0VP5TJY93GVEZhAP0KbD7g==
+[127.0.0.1:54987] ←← 1227 bytes
+HTTP/1.1 200 OK
+Date: Wed, 10 Jun 2026 02:40:10 GMT
+Content-Type: application/octet-stream; charset=utf-8
+Content-Length: 1004
+Cache-Control: no-cache, must-revalidate
+Pragma: no-cache
+Via: 1.1 google
+Alt-Svc: h3=":443"; ma=2592000
+
+fnAyS2ImslCWeS+iCs9utFSQDyXc5cCc5TYEtZSFOyCHZLhp7emIkovoLGnyJlqPVybycUl8xkWAhvJPRGjKX70m8bG9rH1/9PxK9KZkm09cgyyRUlkjTcmk9y+IBxmx4AcHeEuZKzjRmS8BideYfIt+CrVkzK3uu9u5MktKFQKYM12S14Dk7eJA4svUvwQX3pW3mPfLlX+qSNJJPHGrSbx3wFR2KE2tv04v6d5s6GPiP0h55d1gagA/By8635tR8amAA+wyLlhJJvEFlaJ/xcqwXLpK9iikj79h1YisMfn7C87pJ4Kx3Z43fIz0UfmroxQOIWNmsG4qD2mO4s14NifLCCXI8gOK9Mm7PC4kuFyiI13FgXhTDeX3ND1q9jnun+QI04buFGZRZFs/UlnsoT99toTUnHO+WgY0CLfhKScCfI0Wz7RC75n6jgwP4W5gjvfbSXJS9uDWUK//7fKMlcBhnOTaddJ+TGyXzYVAnN7N1ceAAP1Mk9MNXqWPBA1QK2QhiJhk5IzBJ8ShnMg4qvwlxBdkdv8oLHu6IBc8yRsswoG5r9cdrmqHX0XdvkUeqnrTf6t+jC0VlF+OF6DE9h5kiJu5nVYgXHHEJ7xw49iKgnswKo5hGTuieZusJsQEOP8mPa/+r8owiGHP9hWfMu2rwpRGO0V0ycq20YuGFrhWu3rp+8KVm3kN9oQw9zGCqSC0oWdrDxW4kuqyHs7nBzmRszbVV7HpBZNN9L6Yfxy4IOU49DhyBa8NLpEcvU7oiYCi2DrAhuu4343v6pdpmU5GUU720DZ7+EUZ2l2EjQd2nw8A5KreUcaraOidPlVy1GBxfywwcMt4djwkKAT0aaVKPVD2enBhHKSft8O91KeLX3vyG9aMJ7GqyQh6V/+7NiddNtHIsyNs9r/VvAKaHsj+dvZkDc9bDucIXkmxj4Sbb7CHmksQ3BSoNzXv1X+G8mh+JW69dsHScgPoisYcUrISh
+[127.0.0.1:54987] ←← 19 bytes
+kHREYRwOiZgsnqASo0=
+
+
+
+-----------------------
+Venda
+
+[127.0.0.1:49629] →→ 259 bytes
+POST /api/gateway_c2.php HTTP/1.1
+Connection: Keep-Alive
+Content-Type: application/octet-stream
+User-Agent: WinHTTP1.0
+SmonTmVal: 1980221497
+SmonChecker: 19FDDE4E10F951E45ED33E1663AB13423B0D30CE
+Content-Length: 364
+Host: summonerswar-gb-lb.qpyou.cn
+
+
+[127.0.0.1:49629] →→ 364 bytes
+ZCSioi2EsDIzH6I3eGecnlWVUvcWMYz7gBJ5mE486aRBqQDsWzw2TWKvgcnXHyV7TlWj9LCjlFDhIorchjYzW8ag8x5M/ORzOu14cGFl8BYvs1PC/+tnfBlTeK/rKjlkUh3UUHR1UAwPxWSgeKJprm+ai8jJcM5CVnd/KtA1YJsH4zGu7nBwztU7bRbjX4mf4FPfmNZ9UYVjmEVBq3h96I+oRZT8b+Z2NmOD91M2GrdNJbcKWwz549XWa6EOt1U1S0766WPgMY4B+6Ilo23t0+90Z0UGlX79EQI7mXSnlkC2By3KKMPZGaCIqQ1wcpZpojuf4kNWyJpP25T8N/CswGE5SKfHCradEcRADG6w5Qg=
+[127.0.0.1:49629] ←← 1227 bytes
+HTTP/1.1 200 OK
+Date: Wed, 10 Jun 2026 02:40:52 GMT
+Content-Type: application/octet-stream; charset=utf-8
+Content-Length: 1024
+Cache-Control: no-cache, must-revalidate
+Pragma: no-cache
+Via: 1.1 google
+Alt-Svc: h3=":443"; ma=2592000
+
+XYFD5mjN1iARLTcRJE5puuVEUi5/ImrnJVZvsEKz8Jc0XRJXuyws7BfMjRAYlj9e2fUOxeCXDI8wqb5JEQjUDBOTZrzQCKg+WyhIS8ShHDUA/0yybClGNlYs+82v97jyzvMgcyyFhm9lzaCPbeFJenA2WworyU8iwhhGpXdBFFfRSGdsXIA2HDg961dDYqei+43IkuYrtIigzcHDTZVuRCgDQGJAs9ZZcPcgohwQ4nJ3SNPvEtrAEouPX8MdCTEqvacXa4RO6QHnFAsHBjqoDx8/gRnwAwbSQdkmuRUYJWxDNz5DQH01BGJg7f023/4C0plVXDW/H1SeRltXw5e9BH/K2p9bxKtAezbIk8jeYrzGSwlDxpcmQscTbqJqT9UWi9zr1VS8Jgi+pQ88lIexEZAf+poN5yp0abgzjKtT6+jK39i8Dgsslo7xEXlRtL4p5Azso6ykagFG3IvZ/W4JGYupO3iU3Q8NYllMu2d56ShHcXd/IYg8XyfG4gNu3cD03y1X4ErY44iEDHuyFpWolKN6LWvLMUaHC2QLQEgMRKACGA6W8MwoEMKAtPzH9XpSIe7aPlBKsUB7gHaxTZZgnZQgzue3ysKbc/TL/KKXb2Pc4K5SXfdHVaQB1A/Z10MzRuFrSGMqlUVxJ3QPnyjUabHpOdrTWZGZ/gRqqcKotp/u9HeoQXsLDHtWI6SD5F9Je+niYsTCIWYl3DloeVYJXSRyUFhqqTMtRW/k9vA6ZQBplgSXjw+yI0JNQFkByRfklybo4MMNWuf6T+wgKMtH8hvZTJVOQIzYElO5zjcWzVUUeZIeEaRTxkzC0XlgK3/zDwLfbXov4/dHG6lScuNmwrvFQlsqEb9kpkcTy/bdPzrb7jke6TJHe+WfUES/ww6MKy2/a+5FwLbsG8mS6+jH70REJpfSmcN3j4xywr69S8O4KSXP7HN8FaUO/ySXHPbWMkEI9KnUEVPmZNJyGO/zwb6oX
+[127.0.0.1:49629] ←← 39 bytes
+dV2UWjf7nFo/roTqvMypZkXqxIZI+p7lr2fuevV
