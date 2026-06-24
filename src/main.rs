@@ -1,18 +1,14 @@
+mod decryptor;
+use crate::decryptor::decrypt_response;
+
 use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
 use tokio_rustls::{TlsAcceptor, TlsConnector};
-use std::{
-    fs::{self},
-    sync::Arc,
-};
-// use rustls::{ClientConfig, ConfigBuilder, ServerConfig};
+use std::{fs::{self}, sync::Arc };
+use rcgen::{CertificateParams, IsCa, KeyPair};
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpListener, TcpStream},
 };
-
-// use std::io::{Read, Write};
-
-use rcgen::{CertificateParams, IsCa, KeyPair};
 
 #[tokio::main]
 async fn main() {
@@ -157,8 +153,8 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
     println!("[{}] inbound TLS up", addr);
 
-    let SWRequestChunk: Vec<&str> = Vec::new();
-    let SWResponseChunk: Vec<&str> = Vec::new();
+    let swrequest_chunk: Vec<&str> = Vec::new();
+    let swresponse_chunk: Vec<&str> = Vec::new();
 
     // Open TCP to the real Com2us Server
     let upstream_tcp = TcpStream::connect("34.160.216.76:443").await?;
@@ -189,7 +185,8 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
         let mut buf = vec![0u8; 8192];
         loop {
             let n = server_rx.read(&mut buf).await?;
-            if n == 0 { break; }
+            decrypt_response(&"b64").unwrap();
+            // if let Some(json) = decrypt_response(&String::from_utf8_lossy(&buf[..n])).unwrap();
             println!("[{}] ←← {} bytes\n{}", addr, n, String::from_utf8_lossy(&buf[..n]));
             client_tx.write_all(&buf[..n]).await?;
         }
