@@ -49,4 +49,19 @@ mod tests {
 
         assert!(x.is_ok());
     }
+
+    #[test]
+    fn test_decrypt_response() {
+        let req_b64 = "33tZirRCpp4WoYEe0wWTtAdm89YtvRXoVpUz3Ti/FsukjnQlY6Z5n4bB610RD239izC0/lLpTdKLCVWHEnnKLL0nz0PRJglwwiQtTApIWHbPEjRkmNalywSdMNCtYd2X4L4ZBYw1vWfIkzOnRcGTSf0tKvD6YzMuneEoS6rrJEtjJtfnxRBzrgHb1V+4S0c/Eas4fsTnzbpt9FdlN9vRij/mjeMdxy8LoIgJvYBuE+LgRLskpdm1adV3BwDYUj06vaPY6siJX4989CVefwoDfX0FVgsZVJT/ARwZY1CpW82zjnfHeBsLyHg1NLx05sUpCwXNCXLGy338gfXBjvtc71CBgSJsV05eg2ncRa5UdJ0PlmSmRXN0WnAaIUklRMavk3ZyYID0pIWYNxVPYNdK43VAtrZetTdzKBLv/ArPw9QCDkVYGqMPfvQg/dMUvOlaq6qYmU3OLYjdIbLq9Hkpc5LjOCjrqAROFQif2+xMhn4TpOPS75Q6Khl2L0AnK7vCIpw+60KeYXKx0eQLyfZdJfxHiAOLUFWIUiS4U+vlGIMNhvx3e0xV9J6fDlQX5BNBzPWIevVCol8ZQ4+feL50e51D+siA+yAVa6Gukx64Pr0IBaGRi48EvT4Y9M7kzMLLNL0oKGi5pr4Lt8Aw0ngsjX9Gr+CL/5LxAU9R7RXAfO0dHK9TV/Q97YcUe7Vu1DvAcFvhXSVgNsGUk8itCy6lS+BkQu5WWr6btZ8tzpHql4zuKBz4fEgwKfO6VvMiMnO+YduVWa0AmUqD6rT6LpdOatUGY3H1ep9MyW41Pex0l2Z0SLL+SBngcywyjmK8gSPBJ2dAccX6ErfKpq14q6aiMZX6+g74NQV18+jSCfht6c7QlKVfUkW7qvGpHhDW3tyPiOGYoXbFCGsIP/O2rV6IJhuL9l2lI8MIgWFH0N8l35iy/omjQSKZSemV6U5InzZ2xk5VO6QFOEGWKLhdCSHk2Yp8ZHR+EcI1BqjQXHWkVe8=";
+
+        println!("=== test_decryption_against_capture ===");
+
+        let x = decrypt_response(req_b64)
+            .inspect(|json| println!("REQUEST JSON:\n{}\n", json))
+            .inspect_err(|e| eprintln!("REQUEST FAILED: {}\n", e));
+
+        println!("=======================================");
+
+        assert!(x.is_ok());
+    }
 }
