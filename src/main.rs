@@ -1,14 +1,14 @@
 mod decryptor;
-use crate::decryptor::decrypt_response;
+use crate::decryptor::{decrypt_request, decrypt_response};
 
-use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
-use tokio_rustls::{TlsAcceptor, TlsConnector};
-use std::{fs::{self}, sync::Arc };
 use rcgen::{CertificateParams, IsCa, KeyPair};
+use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
+use std::{fs::{self}, sync::Arc };
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpListener, TcpStream},
 };
+use tokio_rustls::{TlsAcceptor, TlsConnector};
 
 #[tokio::main]
 async fn main() {
@@ -172,22 +172,44 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
         loop {
             let n = client_rx.read(&mut buf).await?;
-            if n == 0 { break; }
+            if n == 0 {
+                break;
+            }
 
-            println!("[{}] →→ {} bytes\n{}", addr, n, String::from_utf8_lossy(&buf[..n]));
+            let mut slice = &buf[..n];
+            while let Some(json) = slice.windows(4).position(|w| w == b"\r\n\r\n") {
+                let _ = &slice[..json];
+
+                let body_text = &slice[json + 4..];
+
+                if let Ok(x) = decrypt_request(&String::from_utf8_lossy(&body_text)) {
+                    println!("{}", x);
+                }
+
+                slice = &slice[json + 4..];
+            }
 
             server_tx.write_all(&buf[..n]).await?;
         }
         Ok::<(), std::io::Error>(())
     };
 
-        let to_client = async {
+    let to_client = async {
         let mut buf = vec![0u8; 8192];
         loop {
             let n = server_rx.read(&mut buf).await?;
-            decrypt_response(&"b64").unwrap();
-            // if let Some(json) = decrypt_response(&String::from_utf8_lossy(&buf[..n])).unwrap();
-            println!("[{}] ←← {} bytes\n{}", addr, n, String::from_utf8_lossy(&buf[..n]));
+            let mut slice = &buf[..n];
+            while let Some(json) = slice.windows(4).position(|w| w == b"\r\n\r\n") {
+                let _ = &slice[..json];
+
+                let body_text = &slice[json + 4..];
+
+                if let Ok(x) = decrypt_response(&String::from_utf8_lossy(&body_text)) {
+                    println!("{}", x);
+                }
+
+                slice = &slice[json + 4..];
+            }
             client_tx.write_all(&buf[..n]).await?;
         }
         Ok::<(), std::io::Error>(())
