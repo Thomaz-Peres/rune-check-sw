@@ -135,8 +135,8 @@ async fn listener(cert_pem: String, key_pem: String) -> Result<(), Box<dyn std::
             //         let _ = tls_stream.write_all(b"HTTP/1.1 200 OK\r\nConten-Lenght: 12\r\n\r\nHello, world",).await;
             //     } // Connection closed
             //     _ => {}
-            // };
 
+            // };
             // // // Echo the data back to the client
             // // if let Err(e) = socket.write_all(&buf[0..n]).await {
             // //     eprintln!("Failed to write to socket; err = {:?}", e);
@@ -153,9 +153,6 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
     println!("[{}] inbound TLS up", addr);
 
-    let swrequest_chunk: Vec<&str> = Vec::new();
-    let swresponse_chunk: Vec<&str> = Vec::new();
-
     // Open TCP to the real Com2us Server
     let upstream_tcp = TcpStream::connect("34.160.216.76:443").await?;
 
@@ -169,6 +166,8 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
     let to_upstream = async {
         let mut buf = vec![0u8; 8192];
+        let mut swrequest_chunk: Vec<u8> = Vec::new();
+        let mut header_find = false;
 
         loop {
             let n = client_rx.read(&mut buf).await?;
@@ -176,17 +175,23 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
                 break;
             }
 
-            let mut slice = &buf[..n];
-            while let Some(json) = slice.windows(4).position(|w| w == b"\r\n\r\n") {
-                let _ = &slice[..json];
+            let slice = &buf[..n];
+            let separator = b"\r\n\r\n";
 
-                let body_text = &slice[json + 4..];
-
-                if let Ok(x) = decrypt_request(&String::from_utf8_lossy(&body_text)) {
-                    println!("{}", x);
+            if !header_find
+            {
+                if let Some(index) = slice.windows(separator.len()).position(|window| window == separator) {
+                    header_find = true;
+                    let body_bytes = &slice[index + separator.len()..];
+                    swrequest_chunk.extend_from_slice(body_bytes);
                 }
+            }
+            else {
+                swrequest_chunk.extend_from_slice(slice);
+            }
 
-                slice = &slice[json + 4..];
+            if let Ok(x) = decrypt_request(&swrequest_chunk) {
+                println!("Request\n\r{}", x);
             }
 
             server_tx.write_all(&buf[..n]).await?;
@@ -196,19 +201,33 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
     let to_client = async {
         let mut buf = vec![0u8; 8192];
+        let mut swresponse_chunk: Vec<u8> = Vec::new();
+        let mut header_find = false;
+
         loop {
             let n = server_rx.read(&mut buf).await?;
-            let mut slice = &buf[..n];
-            while let Some(json) = slice.windows(4).position(|w| w == b"\r\n\r\n") {
-                let _ = &slice[..json];
+            if n == 0 {
+                break;
+            }
 
-                let body_text = &slice[json + 4..];
+            let slice = &buf[..n];
+            let separator = b"\r\n\r\n";
 
-                if let Ok(x) = decrypt_response(&String::from_utf8_lossy(&body_text)) {
-                    println!("{}", x);
+            if !header_find
+            {
+                if let Some(index) = slice.windows(separator.len()).position(|window| window == separator) {
+                    header_find = true;
+
+                    let body_bytes = &slice[index + separator.len()..];
+                    swresponse_chunk.extend_from_slice(body_bytes);
                 }
+            }
+            else {
+                swresponse_chunk.extend_from_slice(slice);
+            }
 
-                slice = &slice[json + 4..];
+            if let Ok(x) = decrypt_response(&swresponse_chunk) {
+                println!("Response\n\r{}", x);
             }
             client_tx.write_all(&buf[..n]).await?;
         }
