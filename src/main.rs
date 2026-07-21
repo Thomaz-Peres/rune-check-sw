@@ -1,5 +1,8 @@
 mod decryptor;
+mod http;
+
 use crate::decryptor::{decrypt_request, decrypt_response};
+use crate::http::HttpAssembler;
 
 use rcgen::{CertificateParams, IsCa, KeyPair};
 use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
@@ -166,8 +169,7 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
 
     let to_upstream = async {
         let mut buf = vec![0u8; 8192];
-        let mut swrequest_chunk: Vec<u8> = Vec::new();
-        let mut header_find = false;
+        let mut assembler = HttpAssembler::new();
 
         loop {
             let n = client_rx.read(&mut buf).await?;
@@ -176,33 +178,16 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
             }
 
             let slice = &buf[..n];
-            let separator = b"\r\n\r\n";
 
-            if !header_find
-            {
-                if let Some(index) = slice.windows(separator.len()).position(|window| window == separator) {
-                    header_find = true;
-                    let body_bytes = &slice[index + separator.len()..];
-                    swrequest_chunk.extend_from_slice(body_bytes);
-                }
-            }
-            else {
-                swrequest_chunk.extend_from_slice(slice);
-            }
-
-            if let Ok(x) = decrypt_request(&swrequest_chunk) {
-                println!("Request\n\r{}", x);
-            }
-
-            server_tx.write_all(&buf[..n]).await?;
+            server_tx.write_all(slice).await?;
+            assembler.feed(slice, "Request", decrypt_request);
         }
         Ok::<(), std::io::Error>(())
     };
 
     let to_client = async {
         let mut buf = vec![0u8; 8192];
-        let mut swresponse_chunk: Vec<u8> = Vec::new();
-        let mut header_find = false;
+        let mut assembler = HttpAssembler::new();
 
         loop {
             let n = server_rx.read(&mut buf).await?;
@@ -211,25 +196,9 @@ async fn handle_connection(client_socket: TcpStream, addr: std::net::SocketAddr,
             }
 
             let slice = &buf[..n];
-            let separator = b"\r\n\r\n";
 
-            if !header_find
-            {
-                if let Some(index) = slice.windows(separator.len()).position(|window| window == separator) {
-                    header_find = true;
-
-                    let body_bytes = &slice[index + separator.len()..];
-                    swresponse_chunk.extend_from_slice(body_bytes);
-                }
-            }
-            else {
-                swresponse_chunk.extend_from_slice(slice);
-            }
-
-            if let Ok(x) = decrypt_response(&swresponse_chunk) {
-                println!("Response\n\r{}", x);
-            }
-            client_tx.write_all(&buf[..n]).await?;
+            client_tx.write_all(slice).await?;
+            assembler.feed(slice, "Response", decrypt_response);
         }
         Ok::<(), std::io::Error>(())
     };
